@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="voice_to_text.VoiceRecorderSystray">
+        <div class="o_voice_systray d-flex align-items-center">
+            <button type="button"
+                    t-att-class="'btn o_voice_microphone ' + (state.recording ? 'is-recording' : '')"
+                    t-att-title="state.recording ? 'Detener grabación' : 'Grabar instrucción de voz'"
+                    t-on-click="toggleRecording">
+                <i t-att-class="state.recording ? 'fa fa-stop' : 'fa fa-microphone'"/>
+                <span t-if="state.recording" class="o_voice_recording_label">Grabando</span>
+            </button>
+            <button type="button" class="btn o_voice_history" title="Ver registros de voz" t-on-click="openRecords">
+                <i class="fa fa-history"/>
+            </button>
+        </div>
+
+        <div t-if="state.reviewing" class="o_voice_modal_backdrop">
+            <div class="o_voice_review card" role="dialog" aria-modal="true" aria-label="Revisar grabación">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Revisar instrucción de voz</strong>
+                    <button type="button" class="btn-close" aria-label="Cerrar" t-on-click="discardReview"/>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Corrige el texto si el reconocimiento no fue exacto.</p>
+                    <textarea class="form-control" rows="7" t-att-value="state.transcript"
+                              t-on-input="updateTranscript" placeholder="Texto de la instrucción..."/>
+                    <small class="text-muted d-block mt-2">Duración: <t t-esc="state.duration"/> segundos</small>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-secondary" t-on-click="discardReview" t-att-disabled="state.saving">Descartar</button>
+                    <button type="button" class="btn btn-primary" t-on-click="saveRecording" t-att-disabled="state.saving">
+                        <i class="fa fa-save me-1"/> Guardar audio y texto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
